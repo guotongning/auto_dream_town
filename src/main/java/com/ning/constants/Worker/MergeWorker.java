@@ -64,7 +64,7 @@ public class MergeWorker implements Worker {
             if (element.getLockState() == 1) {
                 break;
             }
-            if (coin > element.getPrice() && element.getLevel() > 6) {
+            if (coin > element.getPrice() && element.getLevel() > 7) {
                 ableBuy = element;
             }
         }
