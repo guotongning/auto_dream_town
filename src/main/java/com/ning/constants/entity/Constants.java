@@ -37,8 +37,15 @@ public class Constants {
     public static final String BUY_RES_1 = "位置已满！合并或拖到左下角出售";
     public static final String BUY_RES_2 = "金币不足";
 
+    /*=============自定义的常量============*/
     /**
-     * 一些游戏中的常量
+     * 异常retry次数
+     */
+    public static int EXCEPTION_RETRY = 10;
+
+    /*=============自定义的常量============*/
+    /**
+     * 地图总容量
      */
     public static final int CAPACITY = 12;
 }

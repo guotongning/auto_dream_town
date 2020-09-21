@@ -1,7 +1,11 @@
 package com.ning.constants.Worker;
 
+import com.ning.constants.entity.Constants;
 import com.ning.constants.entity.LocationInfo;
 import com.ning.constants.entity.MainInfo;
+import com.ning.constants.entity.enums.PlayMode;
+import com.ning.constants.task.MyTimerTask;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 
@@ -10,13 +14,37 @@ import java.util.Map;
  * @Date: 2020/9/20 18:18
  * @Descreption: 游戏
  */
+@Slf4j
 public class PlayWorker {
+
+    /**
+     * 当前运行模式 default : SLOW
+     */
+    public static PlayMode playMode = PlayMode.SLOW;
+
+    /**
+     * 异常retry次数
+     */
+    public static int EXCEPTION_RETRY = 0;
 
     /**
      * 最主要的玩游戏逻辑
      */
     public static void run() {
+        try {
+            log.info("===================GAME START===================");
+            //启动定时任务
+            MyTimerTask.cycleReport();
 
+        } catch (Exception e) {
+            if (++EXCEPTION_RETRY <= Constants.EXCEPTION_RETRY) {
+                log.error("运行异常!尝试重启！重试第" + EXCEPTION_RETRY + "次 {}", e.getMessage(), e);
+                run();
+            } else {
+                log.error("运行异常!程序终止！" + e.getMessage(), e);
+                log.info("===================GAME OVER===================");
+            }
+        }
     }
 
     /**
@@ -65,7 +93,7 @@ public class PlayWorker {
      * 升级回调
      */
     public static void levelUpCallback() {
-        //TODO 开启房屋雨，启动fast模式。持续x分钟，或者达到结束条件。
+        //TODO 开启房屋雨，启动fast模式。持续x分钟，或者达到结束条件。房屋雨可能会伴随着宝箱？房屋雨期间注意关闭MainInfo缓存
 
     }
 }
