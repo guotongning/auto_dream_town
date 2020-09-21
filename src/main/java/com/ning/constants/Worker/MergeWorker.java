@@ -36,25 +36,28 @@ public class MergeWorker implements Worker {
      *
      * @param infos
      */
-    public static boolean merge(LocationInfo[][] infos) {
+    private static boolean merge(LocationInfo[][] infos) {
         for (LocationInfo[] info : infos) {
             if (info[0] != null && info[1] != null) {
                 if (!merge(info[0].getLocationIndex(), info[1].getLocationIndex())) {
                     log.info("合并房屋失败！ fromId = {} toId = {}", info[0].getLocationIndex(), info[1].getLocationIndex());
                     return false;
+                } else {
+                    return true;
                 }
             }
         }
-        return true;
+        return false;
     }
 
     /**
      * 调用合并房屋接口
+     *
      * @param indexFrom
      * @param indexTo
      * @return
      */
-    public static boolean merge(int indexFrom, int indexTo) {
+    private static boolean merge(int indexFrom, int indexTo) {
         String param = "fromId=" + indexFrom + "&" + "toId=" + indexTo;
         String json = HttpClientUtil.sendPostRequest(Constants.MERGE, param);
         Response<Elements> response = JSONObject.parseObject(json, new TypeReference<Response<Elements>>() {
@@ -62,6 +65,7 @@ public class MergeWorker implements Worker {
         if (response != null) {
             Elements result = response.getResult();
             log.info("合并房屋完成 fromId = {},toId = {},合并结果： {}级-{}", indexFrom, indexTo, result.getLevel(), result.getName());
+            MainWork.clearCache();
             return true;
         }
         return false;

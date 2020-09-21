@@ -85,6 +85,7 @@ public class SortWorker implements Worker {
         });
         if (response != null) {
             log.info("房屋出售成功，level = {},获得金币{}", level, response.getResult().getCoin());
+            MainWork.clearCache();
             return true;
         } else {
             log.info("获取房屋出售信息异常");

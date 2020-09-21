@@ -2,10 +2,7 @@ package com.ning.constants.test;
 
 import com.alibaba.fastjson.JSON;
 import com.ning.constants.Worker.*;
-import com.ning.constants.entity.LocationInfo;
-import com.ning.constants.entity.MainInfo;
-import com.ning.constants.entity.Store;
-import com.ning.constants.entity.Wallet;
+import com.ning.constants.entity.*;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
@@ -30,31 +27,39 @@ public class MyTest {
 
     @Test
     public void testSort() {
-        SortWorker.sortIfNeed();
+        boolean b = SortWorker.sortIfNeed();
+        log.info("sort = {}", b);
     }
 
     @Test
     public void testBuy() {
         boolean b = StoreWorker.buyFromStore(1);
-        System.out.println(b);
+        log.info("sort = {}", b);
     }
 
     @Test
     public void testBalance() {
         Wallet balance = CoinWorker.balance();
         if (balance != null) {
-            System.out.println(balance.getCoin());
+            log.info("balance = {}", balance.getCoin());
         }
     }
 
     @Test
     public void testMerge() {
-        MergeWorker.merge();
+        boolean b = MergeWorker.merge();
+        log.info("merge = {}", b);
     }
 
     @Test
     public void testFindMerge() {
         LocationInfo[][] mergeTarget = MergeWorker.findMergeTarget();
-        System.out.println(JSON.toJSONString(mergeTarget));
+        log.info("mergeTarget = {}", JSON.toJSONString(mergeTarget));
+    }
+
+    @Test
+    public void testCanBuyHouse() {
+        Elements canBuyHouse = StoreWorker.getCanBuyHouse();
+        log.info("canBuyHouse = {}", JSON.toJSONString(canBuyHouse));
     }
 }
