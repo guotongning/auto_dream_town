@@ -2,11 +2,7 @@ package com.ning.constants.Worker;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
-import com.ning.constants.core.PlayStarter;
-import com.ning.constants.entity.BuyResult;
-import com.ning.constants.entity.Constants;
-import com.ning.constants.entity.Response;
-import com.ning.constants.entity.Store;
+import com.ning.constants.entity.*;
 import com.ning.constants.util.HttpClientUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,9 +14,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class StoreWorker implements Worker {
 
-    private SortWorker sortWorker = new SortWorker();
-    private MergeWorker mergeWorker = new MergeWorker();
-
+    /**
+     * 获取商店信息
+     *
+     * @return
+     */
     public static Store store() {
         String json = HttpClientUtil.sendGetRequest(Constants.STORE);
         Response<Store> response = JSONObject.parseObject(json, new TypeReference<Response<Store>>() {
@@ -33,6 +31,12 @@ public class StoreWorker implements Worker {
         return null;
     }
 
+    /**
+     * 从商店买房
+     *
+     * @param level
+     * @return
+     */
     public static boolean buyFromStore(int level) {
         String param = "level=" + level + "&type=store";
         String json = HttpClientUtil.sendPostRequest(Constants.BUY, param);
@@ -44,12 +48,41 @@ public class StoreWorker implements Worker {
                 log.info("房屋购买成功！ level = {},剩余金币 = {}", level, result.getAllCoin());
                 return true;
             } else if (result != null && Constants.BUY_RES_1.equals(result.getMessage())) {
-                //位置不足，合并房屋，或者出售。
                 log.info("房屋购买失败! 原因 = {},剩余金币 = {}", result.getMessage(), result.getAllCoin());
-                SortWorker.sortIfNeed();
-                MergeWorker.merge();
+                return false;
+            } else if (result != null && Constants.BUY_RES_2.equals(result.getMessage())) {
+                log.info("房屋购买失败! 原因 = {},剩余金币 = {}", result.getMessage(), result.getAllCoin());
+                return false;
             }
         }
         return false;
     }
+
+    /**
+     * 获取目前能买的起的最贵的房子
+     *
+     * @return
+     */
+    public static Elements getCanBuyHouse() {
+        //余额
+        Wallet balance = CoinWorker.balance();
+        Elements ableBuy = null;
+        if (balance != null) {
+            long coin = balance.getCoin();
+            //商店
+            Store store = StoreWorker.store();
+            if (store != null) {
+                for (Elements element : store.getElements()) {
+                    if (element.getLockState() == 1) {
+                        break;
+                    }
+                    if (coin >= element.getPrice()) {
+                        ableBuy = element;
+                    }
+                }
+            }
+        }
+        return ableBuy;
+    }
+
 }

@@ -18,41 +18,55 @@ import java.util.Map;
 @Slf4j
 public class SortWorker implements Worker {
 
-
     /**
      * 整理房屋，如果需要的话。条件：无法进行merge，且位置满了。
      */
-    public static void sortIfNeed() {
-        log.info("自动整理房屋...");
-        MainInfo mainInfo = MainWork.mainInfo();
-        int emptyPlaceNum = 0;
-        for (Map.Entry<Integer, LocationInfo> entry : mainInfo.getLocationInfo().entrySet()) {
-            if (entry.getValue() == null) {
-                emptyPlaceNum++;
+    public static boolean sortIfNeed() {
+        LocationInfo[][] mergeTarget = MergeWorker.findMergeTarget();
+        //判断是否有房屋可以进行合并，如果有就不卖房。
+        for (LocationInfo[] locationInfos : mergeTarget) {
+            //代表有房屋可以合并
+            if (locationInfos[0] != null && locationInfos[1] != null) {
+                return false;
             }
         }
-        if (emptyPlaceNum == 0) {
-            sort();
-        } else {
-            log.info("无需整理，空闲位置数量 = {}", emptyPlaceNum);
+        if (getEmptyPlaceNum() == 0) {
+            sellWasteHouse();
         }
+        return true;
+    }
+
+    private static int getEmptyPlaceNum() {
+        int emptyPlaceNum = 0;
+        MainInfo mainInfo = MainWork.mainInfo();
+        if (mainInfo != null) {
+            for (Map.Entry<Integer, LocationInfo> entry : mainInfo.getLocationInfo().entrySet()) {
+                if (entry.getValue() == null) {
+                    emptyPlaceNum++;
+                }
+            }
+        }
+        return emptyPlaceNum;
     }
 
     /**
-     * 清理垃圾房屋。垃圾：4级包含4级一下的房屋。
+     * 垃圾房屋定义：level < first_low_level
      */
-    public static void sort() {
+    public static void sellWasteHouse() {
         MainInfo mainInfo = MainWork.mainInfo();
-        List<LocationInfo> infos = new ArrayList<>(mainInfo.getLocationInfo().values());
-        List<LocationInfo> remove = new ArrayList<>();
-        for (LocationInfo info : infos) {
-            if (info.getLevel() <= 5) {
-                remove.add(info);
+        if (mainInfo != null) {
+            List<LocationInfo> infos = new ArrayList<>(mainInfo.getLocationInfo().values());
+            List<LocationInfo> remove = new ArrayList<>();
+            for (LocationInfo info : infos) {
+                //TODO 计算需要卖掉的最低等级
+                if (info.getLevel() <= 5) {
+                    remove.add(info);
+                }
             }
-        }
-        if (remove.size() > 0) {
-            for (LocationInfo locationInfo : remove) {
-                sellHouse(locationInfo.getLocationIndex(), locationInfo.getLevel());
+            if (remove.size() > 0) {
+                for (LocationInfo locationInfo : remove) {
+                    sellHouse(locationInfo.getLocationIndex(), locationInfo.getLevel());
+                }
             }
         }
     }

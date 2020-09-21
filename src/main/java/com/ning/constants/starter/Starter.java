@@ -1,6 +1,6 @@
 package com.ning.constants.starter;
 
-import org.junit.Test;
+import com.ning.constants.Worker.PlayWorker;
 
 /**
  * @Author: nicholas
@@ -8,8 +8,7 @@ import org.junit.Test;
  * @Descreption:
  */
 public class Starter {
-    @Test
-    public void main() {
-
+    public static void main(String[] args) {
+        PlayWorker.run();
     }
 }

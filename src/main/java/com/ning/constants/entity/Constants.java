@@ -21,4 +21,9 @@ public class Constants {
      */
     public static final String BUY_RES_1 = "位置已满！合并或拖到左下角出售";
     public static final String BUY_RES_2 = "金币不足";
+
+    /**
+     * 一些游戏中的常量
+     */
+    public static final int CAPACITY = 12;
 }

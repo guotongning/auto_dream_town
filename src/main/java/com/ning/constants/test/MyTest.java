@@ -15,46 +15,46 @@ import org.junit.Test;
  */
 @Slf4j
 public class MyTest {
-    @Test
-    public void testMainInfo() {
-        MainInfo mainInfo = new MainWork().mainInfo();
-        log.info("mainInfo = {}", mainInfo);
-
-    }
-
-    @Test
-    public void testStore() {
-        Store store = new StoreWorker().store();
-        log.info("store = {}", store);
-    }
-
-    @Test
-    public void testSort() {
-        new SortWorker().sortIfNeed();
-    }
-
-    @Test
-    public void testBuy() {
-        boolean b = new StoreWorker().buyFromStore(1);
-        System.out.println(b);
-    }
-
-    @Test
-    public void testBalance() {
-        Wallet balance = new CoinWorker().balance();
-        if (balance != null) {
-            System.out.println(balance.getCoin());
-        }
-    }
-
-    @Test
-    public void testMerge() {
-        new MergeWorker().merge();
-    }
-
-    @Test
-    public void testFindMerge() {
-        LocationInfo[][] mergeTarget = new MergeWorker().findMergeTarget();
-        System.out.println();
-    }
+//    @Test
+//    public void testMainInfo() {
+//        MainInfo mainInfo = new MainWork().mainInfo();
+//        log.info("mainInfo = {}", mainInfo);
+//
+//    }
+//
+//    @Test
+//    public void testStore() {
+//        Store store = new StoreWorker().store();
+//        log.info("store = {}", store);
+//    }
+//
+//    @Test
+//    public void testSort() {
+//        new SortWorker().sortIfNeed();
+//    }
+//
+//    @Test
+//    public void testBuy() {
+//        boolean b = new StoreWorker().buyFromStore(1);
+//        System.out.println(b);
+//    }
+//
+//    @Test
+//    public void testBalance() {
+//        Wallet balance = new CoinWorker().balance();
+//        if (balance != null) {
+//            System.out.println(balance.getCoin());
+//        }
+//    }
+//
+//    @Test
+//    public void testMerge() {
+//        new MergeWorker().merge();
+//    }
+//
+//    @Test
+//    public void testFindMerge() {
+//        LocationInfo[][] mergeTarget = new MergeWorker().findMergeTarget();
+//        System.out.println();
+//    }
 }
