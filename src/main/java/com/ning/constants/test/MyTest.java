@@ -1,5 +1,6 @@
 package com.ning.constants.test;
 
+import com.alibaba.fastjson.JSON;
 import com.ning.constants.Worker.*;
 import com.ning.constants.entity.LocationInfo;
 import com.ning.constants.entity.MainInfo;
@@ -15,46 +16,45 @@ import org.junit.Test;
  */
 @Slf4j
 public class MyTest {
-//    @Test
-//    public void testMainInfo() {
-//        MainInfo mainInfo = new MainWork().mainInfo();
-//        log.info("mainInfo = {}", mainInfo);
-//
-//    }
-//
-//    @Test
-//    public void testStore() {
-//        Store store = new StoreWorker().store();
-//        log.info("store = {}", store);
-//    }
-//
-//    @Test
-//    public void testSort() {
-//        new SortWorker().sortIfNeed();
-//    }
-//
-//    @Test
-//    public void testBuy() {
-//        boolean b = new StoreWorker().buyFromStore(1);
-//        System.out.println(b);
-//    }
-//
-//    @Test
-//    public void testBalance() {
-//        Wallet balance = new CoinWorker().balance();
-//        if (balance != null) {
-//            System.out.println(balance.getCoin());
-//        }
-//    }
-//
-//    @Test
-//    public void testMerge() {
-//        new MergeWorker().merge();
-//    }
-//
-//    @Test
-//    public void testFindMerge() {
-//        LocationInfo[][] mergeTarget = new MergeWorker().findMergeTarget();
-//        System.out.println();
-//    }
+    @Test
+    public void testMainInfo() {
+        MainInfo mainInfo = MainWork.mainInfo();
+        log.info("mainInfo = {}", mainInfo);
+    }
+
+    @Test
+    public void testStore() {
+        Store store = StoreWorker.store();
+        log.info("store = {}", store);
+    }
+
+    @Test
+    public void testSort() {
+        SortWorker.sortIfNeed();
+    }
+
+    @Test
+    public void testBuy() {
+        boolean b = StoreWorker.buyFromStore(1);
+        System.out.println(b);
+    }
+
+    @Test
+    public void testBalance() {
+        Wallet balance = CoinWorker.balance();
+        if (balance != null) {
+            System.out.println(balance.getCoin());
+        }
+    }
+
+    @Test
+    public void testMerge() {
+        MergeWorker.merge();
+    }
+
+    @Test
+    public void testFindMerge() {
+        LocationInfo[][] mergeTarget = MergeWorker.findMergeTarget();
+        System.out.println(JSON.toJSONString(mergeTarget));
+    }
 }

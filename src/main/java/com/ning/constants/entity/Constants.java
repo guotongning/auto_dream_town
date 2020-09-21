@@ -10,10 +10,25 @@ public class Constants {
      * 主页信息
      */
     public static final String MAIN_INFO = "/web/dreamtown/maininfo";
+    /**
+     * 商店信息
+     */
     public static final String STORE = "/web/dreamtown/store";
+    /**
+     * 合并房屋
+     */
     public static final String MERGE = "/web/dreamtown/compound";
+    /**
+     * 购买房屋
+     */
     public static final String BUY = "/web/dreamtown/buy";
+    /**
+     * 查询余额
+     */
     public static final String BALANCE = "/web/dreamtown/income";
+    /**
+     * 出售房屋
+     */
     public static final String SELL = "/web/dreamtown/sell";
 
     /**
