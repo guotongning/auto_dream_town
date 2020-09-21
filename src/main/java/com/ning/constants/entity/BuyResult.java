@@ -1,6 +1,7 @@
 package com.ning.constants.entity;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @Author: nicholas
@@ -8,6 +9,7 @@ import lombok.Data;
  * @Descreption:
  */
 @Data
+@NoArgsConstructor
 public class BuyResult {
     private long allCoin;
     private String coin;
@@ -15,4 +17,10 @@ public class BuyResult {
     private String message;
     private long price;
     private int state;
+
+    public BuyResult(int level, String message, long price) {
+        this.level = level;
+        this.message = message;
+        this.price = price;
+    }
 }

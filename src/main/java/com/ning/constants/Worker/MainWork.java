@@ -48,15 +48,52 @@ public class MainWork implements Worker {
     }
 
     /**
-     * 获取空闲位置数量
+     *
+     */
+    public static int minLevel() {
+        MainInfo mainInfo = mainInfo();
+        int minLevel = PlayWorker.getSecondLowLevel();
+        if (mainInfo != null) {
+            Map<Integer, LocationInfo> locationInfo = mainInfo.getLocationInfo();
+            for (LocationInfo value : locationInfo.values()) {
+                if (value != null) {
+                    if (value.getLevel() < minLevel) {
+                        minLevel = value.getLevel();
+                    }
+                }
+            }
+        }
+        return minLevel;
+    }
+
+    /**
+     * 获取NORMAL模式空余数量
      */
     public static int emptyLocationNum() {
-        MainInfo mainInfo = mainInfo();
+        MainInfo mainInfo = MainWork.mainInfo();
         int emptyLocationNum = 0;
         if (mainInfo != null) {
             Map<Integer, LocationInfo> locationInfo = mainInfo.getLocationInfo();
             for (LocationInfo value : locationInfo.values()) {
                 if (value == null) {
+                    emptyLocationNum++;
+                }
+            }
+        }
+        return emptyLocationNum;
+    }
+
+    /**
+     * 获取NORMAL模式空余数量
+     */
+    public static int emptyLocationNumNormal() {
+        MainInfo mainInfo = MainWork.mainInfo();
+        int emptyLocationNum = 0;
+        int secondLowLevel = PlayWorker.getSecondLowLevel();
+        if (mainInfo != null) {
+            Map<Integer, LocationInfo> locationInfo = mainInfo.getLocationInfo();
+            for (LocationInfo value : locationInfo.values()) {
+                if (value == null || value.getLevel() < secondLowLevel) {
                     emptyLocationNum++;
                 }
             }

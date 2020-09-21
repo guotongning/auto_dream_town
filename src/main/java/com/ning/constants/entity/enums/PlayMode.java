@@ -9,7 +9,7 @@ package com.ning.constants.entity.enums;
  * <p>
  * normal（4<剩余<9）: 房屋位置空闲不是很多，但不至于购买房屋的时候只能购买second_low_level,比slow快一些，比fast慢一些。
  * <p>
- * slow（0<剩余<=4）: 剩余位置较少，购买房屋的时候有最低等级需求。
+ * slow（0<剩余<=4）: 剩余位置较少，购买房屋的时候有最低等级需求 = second_low_level
  */
 public enum PlayMode {
     FAST,

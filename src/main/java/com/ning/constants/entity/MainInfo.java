@@ -12,4 +12,5 @@ import java.util.Map;
 @Data
 public class MainInfo {
     private Map<Integer, LocationInfo> locationInfo;
+    private UserInfo userInfo;
 }

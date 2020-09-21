@@ -3,6 +3,7 @@ package com.ning.constants.test;
 import com.alibaba.fastjson.JSON;
 import com.ning.constants.Worker.*;
 import com.ning.constants.entity.*;
+import com.ning.constants.entity.enums.PlayMode;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
@@ -33,8 +34,8 @@ public class MyTest {
 
     @Test
     public void testBuy() {
-        boolean b = StoreWorker.buyFromStore(1);
-        log.info("sort = {}", b);
+        BuyResult buyResult = StoreWorker.buyFromStore(1);
+        log.info("sort = {}", JSON.toJSONString(buyResult));
     }
 
     @Test

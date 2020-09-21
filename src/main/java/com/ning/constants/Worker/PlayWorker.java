@@ -1,13 +1,12 @@
 package com.ning.constants.Worker;
 
-import com.ning.constants.entity.Constants;
-import com.ning.constants.entity.LocationInfo;
-import com.ning.constants.entity.MainInfo;
+import com.ning.constants.entity.*;
 import com.ning.constants.entity.enums.PlayMode;
 import com.ning.constants.task.MyTimerTask;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author: nicholas
@@ -35,7 +34,47 @@ public class PlayWorker {
             log.info("===================GAME START===================");
             //启动定时任务
             MyTimerTask.cycleReport();
+            //开始业务
+            while (true) {
+                while (MergeWorker.merge()) {
 
+                }
+                while (true) {
+                    int firstLowLevel = getFirstLowLevel();
+                    BuyResult buyResult = StoreWorker.buyFromStore(firstLowLevel);
+                    if (buyResult.getMessage().equals(Constants.SUCCESS)) {
+                        while (MergeWorker.merge()) {
+
+                        }
+                    }
+                    if (buyResult.getMessage().equals(Constants.BUY_RES_2)) {
+                        long price = buyResult.getPrice();
+                        Wallet balance = CoinWorker.balance();
+                        if (balance != null) {
+                            //差多钱
+                            long diffPrice = price - balance.getCoin();
+                            MainInfo mainInfo = MainWork.mainInfo();
+                            if (mainInfo != null) {
+                                UserInfo userInfo = mainInfo.getUserInfo();
+                                long second = diffPrice / userInfo.getCoinSpeed();
+                                second = second == 0 ? 1 : second;
+                                //等钱
+                                try {
+                                    log.info("进入等待，预计时间 = {}", second);
+                                    TimeUnit.SECONDS.sleep(second);
+                                } catch (InterruptedException e) {
+                                    log.error(e.getMessage(), e);
+                                }
+                            }
+                        }
+                    }
+                    if (buyResult.getMessage().equals(Constants.BUY_RES_1)) {
+                        //整理垃圾房屋
+                        SortWorker.sortIfNeed();
+                    }
+
+                }
+            }
         } catch (Exception e) {
             if (++EXCEPTION_RETRY <= Constants.EXCEPTION_RETRY) {
                 log.error("运行异常!尝试重启！重试第" + EXCEPTION_RETRY + "次 {}", e.getMessage(), e);
@@ -81,11 +120,15 @@ public class PlayWorker {
      */
     public static int getFirstLowLevel() {
         int secondLowLevel = getSecondLowLevel();
-        int emptyLocationNum = MainWork.emptyLocationNum();
-        if (secondLowLevel < emptyLocationNum) {
-            return 1;
+        int emptyNum = Math.max(MainWork.emptyLocationNum(), MainWork.emptyLocationNumNormal());
+        int minLevel = MainWork.minLevel();
+        if (emptyNum == 1) {
+            return minLevel;
+        }
+        if (emptyNum >= 2) {
+            return Math.min(secondLowLevel - emptyNum + 2, minLevel);
         } else {
-            return secondLowLevel - emptyLocationNum + 2;
+            return 1;
         }
     }
 

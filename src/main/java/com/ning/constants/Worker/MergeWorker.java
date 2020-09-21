@@ -37,17 +37,15 @@ public class MergeWorker implements Worker {
      * @param infos
      */
     private static boolean merge(LocationInfo[][] infos) {
+        if (infos[0][0] == null) {
+            return false;
+        }
         for (LocationInfo[] info : infos) {
             if (info[0] != null && info[1] != null) {
-                if (!merge(info[0].getLocationIndex(), info[1].getLocationIndex())) {
-                    log.info("合并房屋失败！ fromId = {} toId = {}", info[0].getLocationIndex(), info[1].getLocationIndex());
-                    return false;
-                } else {
-                    return true;
-                }
+                merge(info[0].getLocationIndex(), info[1].getLocationIndex());
             }
         }
-        return false;
+        return true;
     }
 
     /**

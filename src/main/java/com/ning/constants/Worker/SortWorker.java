@@ -3,6 +3,7 @@ package com.ning.constants.Worker;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.ning.constants.entity.*;
+import com.ning.constants.entity.enums.PlayMode;
 import com.ning.constants.util.HttpClientUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -50,24 +51,24 @@ public class SortWorker implements Worker {
     }
 
     /**
-     * 垃圾房屋定义：level < first_low_level
+     * 垃圾房屋定义：min level
      */
     public static void sellWasteHouse() {
         MainInfo mainInfo = MainWork.mainInfo();
+        LocationInfo min = null;
         if (mainInfo != null) {
-            List<LocationInfo> infos = new ArrayList<>(mainInfo.getLocationInfo().values());
-            List<LocationInfo> remove = new ArrayList<>();
-            for (LocationInfo info : infos) {
-                //TODO 计算需要卖掉的最低等级
-                if (info.getLevel() <= 5) {
-                    remove.add(info);
+            for (LocationInfo value : mainInfo.getLocationInfo().values()) {
+                if (min == null && value != null) {
+                    min = value;
+                    continue;
+                }
+                if (value != null && value.getLevel() < min.getLevel()) {
+                    min = value;
                 }
             }
-            if (remove.size() > 0) {
-                for (LocationInfo locationInfo : remove) {
-                    sellHouse(locationInfo.getLocationIndex(), locationInfo.getLevel());
-                }
-            }
+        }
+        if (min != null) {
+            sellHouse(min.getLocationIndex(), min.getLevel());
         }
     }
 
